@@ -12,6 +12,7 @@ The School Management System (SMS) Flutter app provides an intuitive mobile inte
 This project focuses mainly on frontend development and UI/UX design using Flutter.
 
 🚀 Features
+
 👨‍🎓 Student Management
 
 View student information
