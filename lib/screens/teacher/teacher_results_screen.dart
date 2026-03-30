@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../../widgets/teacher_drawer.dart';
 class TeacherResultsScreen extends StatefulWidget {
   const TeacherResultsScreen({super.key});
 
@@ -129,18 +129,16 @@ class _TeacherResultsScreenState extends State<TeacherResultsScreen> {
   Widget build(BuildContext context) {
     final classStudents =
     students.where((s) => s["class"] == selectedClass).toList();
-
     return Scaffold(
+      drawer: const TeacherDrawer(),
       backgroundColor: const Color(0xFFE6EEF8),
       appBar: AppBar(
-        title: const Text("Exam Results"),
         backgroundColor: const Color(0xFF1E3A8A),
-        actions: [
-          IconButton(
-            onPressed: _showUploadDialog,
-            icon: const Icon(Icons.add),
-          )
-        ],
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text(
+          "Exam Results",
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

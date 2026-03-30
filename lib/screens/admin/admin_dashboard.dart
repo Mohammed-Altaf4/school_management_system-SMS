@@ -8,6 +8,7 @@ import 'fee_management_screen.dart';
 import 'communication_screen.dart';
 import 'reports_screen.dart';
 import '../login_screen.dart';
+import '../../widgets/admin_drawer.dart';
 
 class AdminDashboard extends StatelessWidget {
   const AdminDashboard({super.key});
@@ -20,10 +21,12 @@ class AdminDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: AppDrawer(),
       backgroundColor: iceBlue,
       appBar: AppBar(
         backgroundColor: primaryColor,
         elevation: 0,
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -46,7 +49,7 @@ class AdminDashboard extends StatelessWidget {
         ],
       ),
 
-      drawer: _buildDrawer(context),
+
 
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),

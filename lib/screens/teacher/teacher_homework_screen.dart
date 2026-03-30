@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/teacher_drawer.dart';
 
 class TeacherHomeworkScreen extends StatefulWidget {
   const TeacherHomeworkScreen({super.key});
@@ -91,18 +92,20 @@ class _TeacherHomeworkScreenState extends State<TeacherHomeworkScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const TeacherDrawer(),
       backgroundColor: const Color(0xFFE6EEF8),
-
       appBar: AppBar(
-        title: const Text("Homework Management"),
         backgroundColor: const Color(0xFF1E3A8A),
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text(
+          "Homework Management",
+          style: TextStyle(color: Colors.white),
+        ),
       ),
-
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
-
             /// Assign Homework Button
             Align(
               alignment: Alignment.centerRight,

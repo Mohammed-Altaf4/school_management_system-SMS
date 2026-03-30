@@ -1,13 +1,22 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.school_management_system">
 
+    <!-- 🔥 REQUIRED PERMISSIONS (MOVE ABOVE application) -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
+
+    <!-- 🔥 FIX CAMERA WARNING -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+
     <application
         android:label="School Management System"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/LaunchTheme">
 
-        <!-- Main Activity -->
+        <!-- MAIN ACTIVITY -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
@@ -24,13 +33,13 @@
 
         </activity>
 
-        <!-- Flutter embedding v2 -->
+        <!-- FLUTTER V2 -->
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
     </application>
 
-    <!-- Required for ProcessTextPlugin (Flutter plugin) -->
+    <!-- TEXT PROCESSING SUPPORT -->
     <queries>
         <intent>
             <action android:name="android.intent.action.PROCESS_TEXT"/>

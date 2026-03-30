@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/admin_drawer.dart';
 
 class AttendanceManagementScreen extends StatefulWidget {
   const AttendanceManagementScreen({super.key});
@@ -10,6 +11,9 @@ class AttendanceManagementScreen extends StatefulWidget {
 
 class _AttendanceManagementScreenState
     extends State<AttendanceManagementScreen> {
+
+  /// ✅ FIX: Scaffold Key
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   static const Color primaryColor = Color(0xFF1F3C88);
   static const Color iceBlue = Color(0xFFE6EEF8);
@@ -71,10 +75,24 @@ class _AttendanceManagementScreenState
     totalStudents == 0 ? 0 : (presentCount / totalStudents) * 100;
 
     return Scaffold(
+      key: _scaffoldKey, // ✅ IMPORTANT
+
+      drawer: AppDrawer(),
+
       backgroundColor: iceBlue,
+
       appBar: AppBar(
         backgroundColor: primaryColor,
         elevation: 0,
+
+        /// ✅ FIXED HAMBURGER MENU
+        leading: IconButton(
+          icon: const Icon(Icons.menu, color: Colors.white),
+          onPressed: () {
+            _scaffoldKey.currentState?.openDrawer();
+          },
+        ),
+
         titleSpacing: 20,
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,7 +102,6 @@ class _AttendanceManagementScreenState
               style: TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                letterSpacing: 0.8,
                 color: Colors.white,
               ),
             ),
@@ -99,6 +116,7 @@ class _AttendanceManagementScreenState
           ],
         ),
       ),
+
       body: LayoutBuilder(
         builder: (context, constraints) {
 
@@ -166,51 +184,27 @@ class _AttendanceManagementScreenState
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
 
-                      isMobile
-                          ? Column(
-                        crossAxisAlignment:
-                        CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Mark Attendance - $selectedClass",
-                            style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          const SizedBox(height: 10),
-                          Text(
-                            "Attendance: ${percentage.toStringAsFixed(1)}%",
-                            style: const TextStyle(
-                                color: Colors.black54),
-                          ),
-                          const SizedBox(height: 15),
-                          _saveButton(),
-                        ],
-                      )
-                          : Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
+                      Wrap(
+                        alignment: WrapAlignment.spaceBetween,
                         children: [
                           Column(
-                            crossAxisAlignment:
-                            CrossAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 "Mark Attendance - $selectedClass",
                                 style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight:
-                                    FontWeight.bold),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
+                              const SizedBox(height: 4),
                               Text(
                                 "Attendance: ${percentage.toStringAsFixed(1)}%",
-                                style: const TextStyle(
-                                    color:
-                                    Colors.black54),
-                              )
+                                style: const TextStyle(color: Colors.black54),
+                              ),
                             ],
                           ),
-                          _saveButton()
+                          _saveButton(),
                         ],
                       ),
 
@@ -219,17 +213,6 @@ class _AttendanceManagementScreenState
                       SingleChildScrollView(
                         scrollDirection: Axis.horizontal,
                         child: DataTable(
-                          columnSpacing: 30,
-                          headingTextStyle: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                            color: primaryColor,
-                          ),
-                          dataTextStyle: const TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            color: Colors.black87,
-                          ),
                           columns: const [
                             DataColumn(label: Text("Roll No")),
                             DataColumn(label: Text("Student Name")),
@@ -238,28 +221,20 @@ class _AttendanceManagementScreenState
                             DataColumn(label: Text("Action")),
                           ],
                           rows: classStudents.map((student) {
+
                             String status =
-                                attendanceData[student["id"]] ??
-                                    "Present";
+                                attendanceData[student["id"]] ?? "Present";
 
                             return DataRow(cells: [
-                              DataCell(Text(
-                                  student["roll"].toString())),
+                              DataCell(Text(student["roll"].toString())),
                               DataCell(Text(student["name"])),
                               DataCell(Text(student["id"])),
                               DataCell(_statusBadge(status)),
                               DataCell(
-                                OutlinedButton.icon(
+                                OutlinedButton(
                                   onPressed: () =>
-                                      _toggleAttendance(
-                                          student["id"]),
-                                  icon: Icon(
-                                    status == "Present"
-                                        ? Icons.cancel
-                                        : Icons.check_circle,
-                                    size: 18,
-                                  ),
-                                  label: Text(
+                                      _toggleAttendance(student["id"]),
+                                  child: Text(
                                     status == "Present"
                                         ? "Mark Absent"
                                         : "Mark Present",
@@ -284,9 +259,7 @@ class _AttendanceManagementScreenState
   Widget _classDropdown() {
     return DropdownButtonFormField<String>(
       value: selectedClass,
-      decoration: const InputDecoration(
-        labelText: "Select Class",
-      ),
+      decoration: const InputDecoration(labelText: "Select Class"),
       items: const [
         DropdownMenuItem(value: "10-A", child: Text("Class 10-A")),
         DropdownMenuItem(value: "10-B", child: Text("Class 10-B")),
@@ -331,24 +304,16 @@ class _AttendanceManagementScreenState
     return ElevatedButton.icon(
       style: ElevatedButton.styleFrom(
         backgroundColor: primaryColor,
-        padding:
-        const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12)),
       ),
       onPressed: _saveAttendance,
       icon: const Icon(Icons.save),
-      label: const Text(
-        "Save Attendance",
-        style: TextStyle(fontWeight: FontWeight.bold),
-      ),
+      label: const Text("Save Attendance"),
     );
   }
 
   Widget _statusBadge(String status) {
     return Container(
-      padding:
-      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: status == "Present"
             ? Colors.green.withOpacity(0.15)
@@ -358,9 +323,7 @@ class _AttendanceManagementScreenState
       child: Text(
         status,
         style: TextStyle(
-          color: status == "Present"
-              ? Colors.green
-              : Colors.red,
+          color: status == "Present" ? Colors.green : Colors.red,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -387,32 +350,20 @@ class _AttendanceManagementScreenState
         borderRadius: BorderRadius.circular(18),
       ),
       child: Row(
-        mainAxisAlignment:
-        MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Column(
-              crossAxisAlignment:
-              CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(title,
-                    style: const TextStyle(
-                        color: Colors.black54)),
+                    style: const TextStyle(color: Colors.black54)),
                 const SizedBox(height: 6),
                 Text(value,
                     style: const TextStyle(
                         fontSize: 18,
-                        fontWeight:
-                        FontWeight.bold)),
+                        fontWeight: FontWeight.bold)),
               ]),
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.15),
-              borderRadius:
-              BorderRadius.circular(12),
-            ),
-            child: Icon(icon, color: color),
-          )
+          Icon(icon, color: color),
         ],
       ),
     );

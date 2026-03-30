@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'teacher_management_screen.dart';
+import 'attendance_management_screen.dart';
+import 'academic_management_screen.dart';
+import 'fee_management_screen.dart';
+import 'communication_screen.dart';
+import 'reports_screen.dart';
+import 'admin_dashboard.dart';
 
 class StudentManagementScreen extends StatefulWidget {
   const StudentManagementScreen({super.key});
@@ -9,10 +15,10 @@ class StudentManagementScreen extends StatefulWidget {
       _StudentManagementScreenState();
 }
 
-class _StudentManagementScreenState
-    extends State<StudentManagementScreen> {
+class _StudentManagementScreenState extends State<StudentManagementScreen> {
 
   final Color primaryColor = const Color(0xFF1F3C88);
+  final Color darkBlue = const Color(0xFF162E6E);
   final Color iceBlue = const Color(0xFFE6EEF8);
 
   final TextEditingController searchController = TextEditingController();
@@ -25,6 +31,7 @@ class _StudentManagementScreenState
   @override
   void initState() {
     super.initState();
+
     students = [
       _dummyStudent("STU001", "Aarav Sharma", "10", "A", "12", "9876543210", "Paid"),
       _dummyStudent("STU002", "Ishita Patel", "9", "B", "5", "9123456780", "Unpaid"),
@@ -44,6 +51,7 @@ class _StudentManagementScreenState
       String roll,
       String phone,
       String feeStatus) {
+
     return {
       "id": id,
       "name": name,
@@ -77,48 +85,173 @@ class _StudentManagementScreenState
     setState(() {
       students.add(newStudent);
       filteredStudents = students;
+      studentCounter++;
     });
+  }
+
+  void _openAddStudentDialog() {
+    showDialog(
+      context: context,
+      builder: (_) => AddStudentDialog(
+        studentId: "STU00$studentCounter",
+        onSave: (student) {
+          _addStudent(student);
+        },
+      ),
+    );
+  }
+
+  /// ================= DRAWER =================
+
+  Drawer _buildDrawer(BuildContext context) {
+    return Drawer(
+      backgroundColor: primaryColor,
+      child: ListView(
+        children: [
+
+          const DrawerHeader(
+            decoration: BoxDecoration(color: Color(0xFF162E6E)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(Icons.school, color: Colors.white, size: 40),
+                SizedBox(height: 10),
+                Text(
+                  "School Management",
+                  style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  "Administrator Panel",
+                  style: TextStyle(color: Colors.white70),
+                ),
+              ],
+            ),
+          ),
+
+          _drawerItem(Icons.dashboard, "Admin Dashboard", () {
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const AdminDashboard()));
+          }),
+
+          _drawerItem(Icons.people, "Student Management", () {
+            Navigator.pop(context);
+          }),
+
+          _drawerItem(Icons.person, "Teacher Management", () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const TeacherManagementScreen()));
+          }),
+
+          _drawerItem(Icons.check_circle, "Attendance Management", () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const AttendanceManagementScreen()));
+          }),
+
+          _drawerItem(Icons.menu_book, "Academic Management", () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const AcademicManagementScreen()));
+          }),
+
+          _drawerItem(Icons.attach_money, "Fee Management", () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const FeeManagementScreen()));
+          }),
+
+          _drawerItem(Icons.message, "Communication", () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const CommunicationScreen()));
+          }),
+
+          _drawerItem(Icons.bar_chart, "Report", () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => const ReportsScreen()));
+          }),
+        ],
+      ),
+    );
+  }
+
+  Widget _drawerItem(IconData icon, String title, VoidCallback onTap) {
+    return ListTile(
+      leading: Icon(icon, color: Colors.white),
+      title: Text(title, style: const TextStyle(color: Colors.white)),
+      hoverColor: Colors.white10,
+      onTap: onTap,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
+
+      drawer: _buildDrawer(context),
+
       backgroundColor: iceBlue,
+
       appBar: AppBar(
         backgroundColor: primaryColor,
         elevation: 0,
+
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu, color: Colors.white),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+          ),
+        ),
+
         title: const Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
               "Student Management",
               style: TextStyle(
-                fontSize: 20,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
-                letterSpacing: 0.5,
               ),
             ),
-            SizedBox(height: 2),
             Text(
-              "Manage student records and information",
+              "Manage student records",
               style: TextStyle(
-                fontSize: 13,
+                fontSize: 12,
                 color: Colors.white70,
               ),
             )
           ],
         ),
       ),
+
       body: Padding(
         padding: const EdgeInsets.all(20),
+
         child: Column(
           children: [
 
-            /// Top Section
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+
                 Text(
                   "All Students (${filteredStudents.length})",
                   style: const TextStyle(
@@ -127,42 +260,27 @@ class _StudentManagementScreenState
                     color: Color(0xFF1F3C88),
                   ),
                 ),
+
                 ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: primaryColor,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 14),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    elevation: 3,
                   ),
-                  onPressed: () => _openAddStudentDialog(),
-                  icon: const Icon(Icons.add, size: 20),
-                  label: const Text(
-                    "Add Student",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold),
-                  ),
+                  onPressed: _openAddStudentDialog,
+                  icon: const Icon(Icons.add),
+                  label: const Text("Add Student"),
                 )
               ],
             ),
 
             const SizedBox(height: 20),
 
-            /// Search Bar
             TextField(
               controller: searchController,
               onChanged: _searchStudent,
-              style: const TextStyle(
-                color: Colors.black87,
-                fontWeight: FontWeight.w500,
-              ),
               decoration: InputDecoration(
-                hintText:
-                "Search by name, ID, class, roll number, or phone number",
-                hintStyle: const TextStyle(color: Colors.black54),
-                prefixIcon: const Icon(Icons.search, color: Colors.black54),
+                hintText: "Search students...",
+                prefixIcon: const Icon(Icons.search),
                 filled: true,
                 fillColor: Colors.white,
                 border: OutlineInputBorder(
@@ -173,7 +291,6 @@ class _StudentManagementScreenState
 
             const SizedBox(height: 20),
 
-            /// Student Table
             Expanded(
               child: Container(
                 padding: const EdgeInsets.all(10),
@@ -181,19 +298,13 @@ class _StudentManagementScreenState
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(16),
                 ),
+
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
+
                   child: DataTable(
-                    headingTextStyle: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF1F3C88),
-                      fontSize: 15,
-                    ),
-                    dataTextStyle: const TextStyle(
-                      color: Colors.black87,
-                      fontWeight: FontWeight.w500,
-                    ),
                     columnSpacing: 30,
+
                     columns: const [
                       DataColumn(label: Text("Student ID")),
                       DataColumn(label: Text("Name")),
@@ -204,45 +315,35 @@ class _StudentManagementScreenState
                       DataColumn(label: Text("Fee Status")),
                       DataColumn(label: Text("Actions")),
                     ],
+
                     rows: filteredStudents.map((student) {
+
                       return DataRow(cells: [
+
                         DataCell(Text(student["id"])),
                         DataCell(Text(student["name"])),
                         DataCell(Text(student["class"])),
                         DataCell(Text(student["section"])),
                         DataCell(Text(student["roll"])),
                         DataCell(Text(student["phone"])),
-                        DataCell(Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 6),
-                          decoration: BoxDecoration(
-                            color: student["feeStatus"] == "Paid"
-                                ? Colors.green.withOpacity(0.15)
-                                : Colors.red.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(20),
+
+                        DataCell(Text(student["feeStatus"])),
+
+                        DataCell(
+                          PopupMenuButton<String>(
+                            onSelected: (value) {
+                              if (value == "Delete") {
+                                _deleteStudent(student["id"]);
+                              }
+                            },
+                            itemBuilder: (context) => const [
+                              PopupMenuItem(
+                                value: "Delete",
+                                child: Text("Delete"),
+                              ),
+                            ],
                           ),
-                          child: Text(
-                            student["feeStatus"],
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: student["feeStatus"] == "Paid"
-                                  ? Colors.green
-                                  : Colors.red,
-                            ),
-                          ),
-                        )),
-                        DataCell(PopupMenuButton<String>(
-                          iconColor: primaryColor,
-                          onSelected: (value) {
-                            if (value == "Delete") {
-                              _deleteStudent(student["id"]);
-                            }
-                          },
-                          itemBuilder: (context) => const [
-                            PopupMenuItem(
-                                value: "Delete", child: Text("Delete")),
-                          ],
-                        )),
+                        ),
                       ]);
                     }).toList(),
                   ),
@@ -254,26 +355,18 @@ class _StudentManagementScreenState
       ),
     );
   }
-
-  void _openAddStudentDialog() {
-    showDialog(
-      context: context,
-      builder: (_) => AddStudentDialog(
-        onSave: (student) {
-          _addStudent(student);
-        },
-        studentId: "STU00$studentCounter",
-      ),
-    );
-  }
 }
 
 class AddStudentDialog extends StatefulWidget {
+
   final Function(Map<String, dynamic>) onSave;
   final String studentId;
 
-  const AddStudentDialog(
-      {super.key, required this.onSave, required this.studentId});
+  const AddStudentDialog({
+    super.key,
+    required this.onSave,
+    required this.studentId,
+  });
 
   @override
   State<AddStudentDialog> createState() => _AddStudentDialogState();
@@ -286,71 +379,60 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
 
   @override
   Widget build(BuildContext context) {
+
     return AlertDialog(
-      title: const Text(
-        "Add Student",
-        style: TextStyle(
-            fontWeight: FontWeight.bold,
-            color: Color(0xFF1F3C88)),
-      ),
+      title: const Text("Add Student"),
+
       content: SizedBox(
-        width: 500,
+        width: 400,
         child: Form(
           key: _formKey,
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
 
-                TextFormField(
-                  initialValue: widget.studentId,
-                  decoration:
-                  const InputDecoration(labelText: "Student ID"),
-                  enabled: false,
-                ),
+              TextFormField(
+                initialValue: widget.studentId,
+                decoration: const InputDecoration(labelText: "Student ID"),
+                enabled: false,
+              ),
 
-                const SizedBox(height: 12),
+              const SizedBox(height: 12),
 
-                _field("Full Name"),
-                _field("Class"),
-                _field("Section"),
-                _field("Roll Number"),
-                _field("Phone"),
+              _field("name"),
+              _field("class"),
+              _field("section"),
+              _field("roll"),
+              _field("phone"),
 
-                const SizedBox(height: 15),
+              const SizedBox(height: 12),
 
-                DropdownButtonFormField<String>(
-                  decoration:
-                  const InputDecoration(labelText: "Fee Status"),
-                  items: const [
-                    DropdownMenuItem(value: "Paid", child: Text("Paid")),
-                    DropdownMenuItem(value: "Unpaid", child: Text("Unpaid")),
-                  ],
-                  onChanged: (val) => data["feeStatus"] = val,
-                ),
+              DropdownButtonFormField<String>(
+                decoration: const InputDecoration(labelText: "Fee Status"),
+                items: const [
+                  DropdownMenuItem(value: "Paid", child: Text("Paid")),
+                  DropdownMenuItem(value: "Unpaid", child: Text("Unpaid")),
+                ],
+                onChanged: (val) => data["feeStatus"] = val,
+              ),
 
-                const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1F3C88),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 30, vertical: 14),
-                  ),
-                  onPressed: () {
-                    if (_formKey.currentState!.validate()) {
-                      data["id"] = widget.studentId;
-                      widget.onSave(data);
-                      Navigator.pop(context);
-                    }
-                  },
-                  child: const Text(
-                    "Save Student",
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold),
-                  ),
-                )
-              ],
-            ),
+              ElevatedButton(
+                onPressed: () {
+
+                  if (_formKey.currentState!.validate()) {
+
+                    data["id"] = widget.studentId;
+
+                    widget.onSave(data);
+
+                    Navigator.pop(context);
+                  }
+                },
+                child: const Text("Save Student"),
+              )
+            ],
           ),
         ),
       ),
@@ -364,7 +446,7 @@ class _AddStudentDialogState extends State<AddStudentDialog> {
         decoration: InputDecoration(labelText: label),
         validator: (value) =>
         value == null || value.isEmpty ? "Required" : null,
-        onChanged: (val) => data[label.toLowerCase()] = val,
+        onChanged: (val) => data[label] = val,
       ),
     );
   }

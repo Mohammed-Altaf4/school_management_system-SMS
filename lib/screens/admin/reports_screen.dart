@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fl_chart/fl_chart.dart';
+import '../../widgets/admin_drawer.dart';
 
 class ReportsScreen extends StatefulWidget {
   const ReportsScreen({super.key});
@@ -11,6 +12,7 @@ class ReportsScreen extends StatefulWidget {
 class _ReportsScreenState extends State<ReportsScreen> {
   static const Color primaryColor = Color(0xFF1F3C88);
   static const Color cardColor = Colors.white;
+  static const Color backgroundColor = Color(0xFFEAF6FF);
 
   String selectedPeriod = "This Month";
 
@@ -83,28 +85,38 @@ class _ReportsScreenState extends State<ReportsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      drawer: AppDrawer(),
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: primaryColor,
-        title: const Text("Reports & Analytics"),
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Reports & Analytics",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: Colors.white,
+              ),
+            ),
+            Text(
+              "View and download detailed reports",
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.white70,
+              ),
+            )
+          ],
+        ),
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ================= HEADER =================
-            Text(
-              "Reports & Analytics",
-              style: TextStyle(
-                  fontSize: 24, fontWeight: FontWeight.bold, color: primaryColor),
-            ),
-            const SizedBox(height: 4),
-            const Text(
-              "View and download detailed reports",
-              style: TextStyle(color: Colors.black54),
-            ),
-            const SizedBox(height: 16),
 
             // ================= DROPDOWN =================
             DropdownButton<String>(

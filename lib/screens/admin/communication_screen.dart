@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/admin_drawer.dart';
 
 class CommunicationScreen extends StatefulWidget {
   const CommunicationScreen({super.key});
@@ -92,10 +93,31 @@ class _CommunicationScreenState extends State<CommunicationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: AppDrawer(),
       backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: primaryColor,
-        title: const Text("Communication"),
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Communication",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: Colors.white,
+              ),
+            ),
+            Text(
+              "Send messages and announcements",
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.white70,
+              ),
+            )
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -103,18 +125,6 @@ class _CommunicationScreenState extends State<CommunicationScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /// HEADER
-            const Text(
-              "Communication",
-              style: TextStyle(
-                  fontSize: 28, fontWeight: FontWeight.bold, color: Colors.black87),
-            ),
-            const SizedBox(height: 6),
-            const Text(
-              "Send messages and announcements",
-              style: TextStyle(
-                  fontSize: 16, fontWeight: FontWeight.w500, color: Colors.black54),
-            ),
-            const SizedBox(height: 20),
 
             /// GRID: Send Message + Quick Actions
             Column(

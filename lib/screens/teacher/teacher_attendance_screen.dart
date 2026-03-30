@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../../widgets/teacher_drawer.dart';
 // Dummy students data
 final List<Map<String, dynamic>> students = [
   {'id': 1, 'name': 'John Doe', 'rollNo': '101', 'class': '10-A'},
@@ -58,10 +58,15 @@ class _TeacherAttendanceScreenState extends State<TeacherAttendanceScreen> {
     classStudents.isEmpty ? 0 : (presentCount / classStudents.length * 100);
 
     return Scaffold(
+      drawer: const TeacherDrawer(),
       backgroundColor: const Color(0xFFE6EEF8),
       appBar: AppBar(
-        title: const Text("Mark Attendance"),
         backgroundColor: const Color(0xFF1E3A8A),
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text(
+          "Mark Attendance",
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

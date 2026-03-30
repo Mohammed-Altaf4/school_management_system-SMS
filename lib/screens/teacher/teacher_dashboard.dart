@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'teacher_attendance_screen.dart';
 import 'teacher_homework_screen.dart';
 import 'teacher_results_screen.dart';
-
+import '../../widgets/teacher_drawer.dart';
 // Dummy Data
 final List<Map<String, dynamic>> timetable = [
   {
@@ -95,12 +95,14 @@ class _TeacherDashboardState extends State<TeacherDashboard>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const TeacherDrawer(),
       backgroundColor: const Color(0xFFE6EEF8),
       appBar: AppBar(
         backgroundColor: const Color(0xFF1E3A8A),
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           'Teacher Dashboard',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white),
         ),
         actions: [
           IconButton(
@@ -110,64 +112,7 @@ class _TeacherDashboardState extends State<TeacherDashboard>
           ),
         ],
       ),
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Color(0xFF1E3A8A)),
-              child: Text("Menu",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold)),
-            ),
-            ListTile(
-              leading: const Icon(Icons.check_circle),
-              title: const Text("Attendance"),
-              onTap: () {
-                Navigator.pop(context); // Close drawer
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const TeacherAttendanceScreen(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.book),
-              title: const Text("Homework"),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const TeacherHomeworkScreen(),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.bar_chart),
-              title: const Text("Results"),
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const TeacherResultsScreen(),
-                  ),
-                );
-              },
-            ),
 
-            ListTile(
-              leading: const Icon(Icons.logout),
-              title: const Text("Logout"),
-              onTap: () => _showLogoutDialog(context),
-            ),
-          ],
-        ),
-      ),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../widgets/admin_drawer.dart';
 
 class FeeManagementScreen extends StatefulWidget {
   const FeeManagementScreen({super.key});
@@ -77,10 +78,31 @@ class _FeeManagementScreenState extends State<FeeManagementScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: AppDrawer(),
       backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: primaryColor,
-        title: const Text("Fee Management"),
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Fee Management",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+                color: Colors.white,
+              ),
+            ),
+            Text(
+              "Track and manage student fee payments",
+              style: TextStyle(
+                fontSize: 13,
+                color: Colors.white70,
+              ),
+            )
+          ],
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
@@ -88,29 +110,7 @@ class _FeeManagementScreenState extends State<FeeManagementScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /// =============== HEADER ===============
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: const [
-                Text(
-                  "Fee Management",
-                  style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-                SizedBox(height: 6),
-                Text(
-                  "Track and manage student fee payments",
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black54,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 20),
+
 
             /// =============== STATS (VERTICAL) ===============
             _statCard("Total Collected", totalCollected, Colors.green),
